@@ -11,16 +11,6 @@ mlflow.set_experiment("Heart Disease Experiment")
 
 mlflow.sklearn.autolog(log_models=False)
 
-mlflow.sklearn.log_model(
-    sk_model=model,
-    artifact_path="model",
-    pip_requirements=[
-        "mlflow==2.14.3",
-        "scikit-learn==1.5.1",
-        "pandas==2.2.2",
-        "numpy==1.26.4"
-    ]
-)
 
 df = pd.read_csv("heartdisease_preprocessing.csv")
 
@@ -45,5 +35,16 @@ with mlflow.start_run() as run:
 
     with open("run_id.txt", "w") as f:
         f.write(run_id)
+
+    mlflow.sklearn.log_model(
+        sk_model=model,
+        artifact_path="model",
+        pip_requirements=[
+            "mlflow==2.14.3",
+            "scikit-learn==1.5.1",
+            "pandas==2.2.2",
+            "numpy==1.26.4"
+        ]
+    )
 
     joblib.dump(model, "random_forest_model.pkl")
