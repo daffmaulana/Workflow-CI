@@ -52,7 +52,7 @@ jobs:
         run: |
           cd MLProject
           mlflow models build-docker \
-          -m runs:/d9878d4e6fab426db0db96328a47bb81/model \
+          -m runs:/e0ae7d60788d4b3ca4bba4c4d53304b9/model \
           -n ${{ secrets.DOCKER_USERNAME }}/heart-disease-mlflow
 
       - name: Push Docker Image
