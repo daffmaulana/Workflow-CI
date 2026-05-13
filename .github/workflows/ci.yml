@@ -58,7 +58,6 @@ jobs:
           mlflow models build-docker \
           -m "runs:/${{ env.RUN_ID }}/model" \
           -n ${{ secrets.DOCKER_USERNAME }}/heart-disease-mlflow
-          --env-manager local
 
       - name: Push Docker Image
         run: |
