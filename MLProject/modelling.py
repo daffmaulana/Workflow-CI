@@ -25,4 +25,7 @@ model.fit(X_train, y_train)
 
 y_pred = model.predict(X_test)
 
+run_id = mlflow.active_run().info.run_id
+print(f"RUN_ID={run_id}")
+
 joblib.dump(model, "random_forest_model.pkl")
