@@ -9,7 +9,18 @@ from sklearn.ensemble import RandomForestClassifier
 mlflow.set_tracking_uri("file:./mlruns")
 mlflow.set_experiment("Heart Disease Experiment")
 
-mlflow.sklearn.autolog()
+mlflow.sklearn.autolog(log_models=False)
+
+mlflow.sklearn.log_model(
+    sk_model=model,
+    artifact_path="model",
+    pip_requirements=[
+        "mlflow==2.14.3",
+        "scikit-learn==1.5.1",
+        "pandas==2.2.2",
+        "numpy==1.26.4"
+    ]
+)
 
 df = pd.read_csv("heartdisease_preprocessing.csv")
 
