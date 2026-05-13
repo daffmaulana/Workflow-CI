@@ -19,14 +19,20 @@ y = df["target"]
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=2026)
 
 
-model = RandomForestClassifier(n_estimators=100, random_state=2026)  
+with mlflow.start_run() as run:
 
-model.fit(X_train, y_train)
+    model = RandomForestClassifier(
+        n_estimators=100,
+        random_state=2026
+    )
 
-y_pred = model.predict(X_test)
+    model.fit(X_train, y_train)
 
-run_id = mlflow.active_run().info.run_id
-with open("run_id.txt", "w") as f:
-    f.write(run_id)
+    y_pred = model.predict(X_test)
 
-joblib.dump(model, "random_forest_model.pkl")
+    run_id = run.info.run_id
+
+    with open("run_id.txt", "w") as f:
+        f.write(run_id)
+
+    joblib.dump(model, "random_forest_model.pkl")
