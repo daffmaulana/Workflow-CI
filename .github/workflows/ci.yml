@@ -32,12 +32,11 @@ jobs:
           echo "MLFLOW_TRACKING_URI=file:./mlruns"
 
       - name: Run Training Script
-        id: train
         run: |
           cd MLProject
-          python modelling.py | tee output.txt
+          python modelling.py
 
-          RUN_ID=$(grep RUN_ID output.txt | cut -d '=' -f2)
+          RUN_ID=$(cat run_id.txt)
 
           echo "RUN_ID=$RUN_ID" >> $GITHUB_ENV
 
