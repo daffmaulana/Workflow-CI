@@ -41,7 +41,6 @@ mlflow.sklearn.log_model(
 
 joblib.dump(model, "random_forest_model.pkl")
 
-# Ambil active run yang dibuat MLflow Project
 run = mlflow.active_run()
 
 if run:
