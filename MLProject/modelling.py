@@ -33,19 +33,13 @@ y_pred = model.predict(X_test)
 
 accuracy = accuracy_score(y_test, y_pred)
 
-# manual logging
-mlflow.log_param("n_estimators", 100)
 mlflow.log_metric("accuracy", accuracy)
 
-# WAJIB
-mlflow.sklearn.log_model(
-    sk_model=model,
-    artifact_path="model"
-)
+mlflow.sklearn.log_model(model, "model")
 
 joblib.dump(model, "random_forest_model.pkl")
 
-# ambil active run dari MLflow Project
+# Ambil active run yang dibuat MLflow Project
 run = mlflow.active_run()
 
 if run:
