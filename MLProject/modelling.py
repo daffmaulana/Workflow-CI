@@ -10,6 +10,8 @@ from sklearn.metrics import accuracy_score
 mlflow.set_tracking_uri("file:./mlruns")
 mlflow.set_experiment("Heart Disease Experiment")
 
+mlflow.sklearn.autolog()
+
 df = pd.read_csv("heartdisease_preprocessing.csv")
 
 X = df.drop("target", axis=1)
