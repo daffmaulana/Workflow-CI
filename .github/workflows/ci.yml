@@ -31,20 +31,21 @@ jobs:
         run: |
           echo "MLFLOW_TRACKING_URI=file:./mlruns"
 
-      - name: Run Training Script
+      - name: Run MLflow Project
         run: |
-          cd MLProject
-          python modelling.py
+          mlflow run MLProject --env-manager=local
 
-          RUN_ID=$(cat run_id.txt)
-
+      - name: Get MLflow Run ID
+        run: |
+          RUN_ID=$(find mlruns -name meta.yaml | head -n 1 | xargs grep run_id | awk '{print $2}')
           echo "RUN_ID=$RUN_ID" >> $GITHUB_ENV
+          echo "Detected RUN_ID=$RUN_ID"
 
-      - name: Upload Model Artifact
+      - name: Upload MLflow Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: trained-model
-          path: MLProject/random_forest_model.pkl
+          name: mlflow-artifacts
+          path: mlruns
 
       - name: Login to DockerHub
         uses: docker/login-action@v3

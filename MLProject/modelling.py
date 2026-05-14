@@ -35,4 +35,6 @@ with mlflow.start_run() as run:
     with open("run_id.txt", "w") as f:
         f.write(run_id)
 
+    mlflow.sklearn.log_model(model, "model")
+    
     joblib.dump(model, "random_forest_model.pkl")
