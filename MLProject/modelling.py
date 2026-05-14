@@ -47,6 +47,6 @@ joblib.dump(model, "random_forest_model.pkl")
 # Ambil active run yang dibuat MLflow Project
 run_id = os.environ.get("MLFLOW_RUN_ID")
 
-if run:
+if run_id:
     with open("run_id.txt", "w") as f:
         f.write(run.info.run_id)
