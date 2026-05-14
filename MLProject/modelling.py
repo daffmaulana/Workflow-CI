@@ -2,12 +2,12 @@ import pandas as pd
 import mlflow
 import mlflow.sklearn
 import joblib
-import os
 
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 
+mlflow.set_tracking_uri("file:./mlruns")
 mlflow.set_experiment("Heart Disease Experiment")
 
 mlflow.sklearn.autolog()
@@ -45,8 +45,8 @@ mlflow.sklearn.log_model(
 joblib.dump(model, "random_forest_model.pkl")
 
 # Ambil active run yang dibuat MLflow Project
-run_id = os.environ.get("MLFLOW_RUN_ID")
+run = mlflow.active_run()
 
-if run_id:
+if run:
     with open("run_id.txt", "w") as f:
         f.write(run.info.run_id)
