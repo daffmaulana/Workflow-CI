@@ -5,6 +5,7 @@ import joblib
 
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
 
 mlflow.set_tracking_uri("file:./mlruns")
 mlflow.set_experiment("Heart Disease Experiment")
@@ -16,25 +17,33 @@ df = pd.read_csv("heartdisease_preprocessing.csv")
 X = df.drop("target", axis=1)
 y = df["target"]
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=2026)
+X_train, X_test, y_train, y_test = train_test_split(
+    X,
+    y,
+    test_size=0.2,
+    random_state=2026
+)
 
+model = RandomForestClassifier(
+    n_estimators=100,
+    random_state=2026
+)
 
-with mlflow.start_run() as run:
+model.fit(X_train, y_train)
 
-    model = RandomForestClassifier(
-        n_estimators=100,
-        random_state=2026
-    )
+y_pred = model.predict(X_test)
 
-    model.fit(X_train, y_train)
+accuracy = accuracy_score(y_test, y_pred)
 
-    y_pred = model.predict(X_test)
+mlflow.log_metric("accuracy", accuracy)
 
-    run_id = run.info.run_id
+mlflow.sklearn.log_model(model, "model")
 
+joblib.dump(model, "random_forest_model.pkl")
+
+# Ambil active run yang dibuat MLflow Project
+run = mlflow.active_run()
+
+if run:
     with open("run_id.txt", "w") as f:
-        f.write(run_id)
-
-    mlflow.sklearn.log_model(model, "model")
-    
-    joblib.dump(model, "random_forest_model.pkl")
+        f.write(run.info.run_id)
