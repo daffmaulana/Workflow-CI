@@ -22,30 +22,32 @@ X_train, X_test, y_train, y_test = train_test_split(
     random_state=2026
 )
 
-with mlflow.start_run():
+model = RandomForestClassifier(
+    n_estimators=100,
+    random_state=2026
+)
 
-    model = RandomForestClassifier(
-        n_estimators=100,
-        random_state=2026
-    )
+model.fit(X_train, y_train)
 
-    model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
 
-    y_pred = model.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
 
-    accuracy = accuracy_score(y_test, y_pred)
+# manual logging
+mlflow.log_param("n_estimators", 100)
+mlflow.log_metric("accuracy", accuracy)
 
-    mlflow.log_param("n_estimators", 100)
-    mlflow.log_metric("accuracy", accuracy)
+# WAJIB
+mlflow.sklearn.log_model(
+    sk_model=model,
+    artifact_path="model"
+)
 
-    mlflow.sklearn.log_model(
-        sk_model=model,
-        artifact_path="model"
-    )
+joblib.dump(model, "random_forest_model.pkl")
 
-    joblib.dump(model, "random_forest_model.pkl")
+# ambil active run dari MLflow Project
+run = mlflow.active_run()
 
-    run = mlflow.active_run()
-
+if run:
     with open("run_id.txt", "w") as f:
         f.write(run.info.run_id)
