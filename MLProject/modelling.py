@@ -37,7 +37,10 @@ accuracy = accuracy_score(y_test, y_pred)
 
 mlflow.log_metric("accuracy", accuracy)
 
-mlflow.sklearn.log_model(model, "model")
+mlflow.sklearn.log_model(
+    sk_model=model,
+    artifact_path="model"
+)
 
 joblib.dump(model, "random_forest_model.pkl")
 
