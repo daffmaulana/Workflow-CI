@@ -37,7 +37,7 @@ jobs:
 
       - name: Get MLflow Run ID
         run: |
-          RUN_ID=$(find mlruns -name meta.yaml | head -n 1 | xargs grep run_id | awk '{print $2}')
+          RUN_ID=$(cat MLProject/run_id.txt)
           echo "RUN_ID=$RUN_ID" >> $GITHUB_ENV
           echo "Detected RUN_ID=$RUN_ID"
 
