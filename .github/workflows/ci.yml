@@ -29,7 +29,7 @@ jobs:
 
       - name: Set MLflow Tracking URI
         run: |
-          echo "MLFLOW_TRACKING_URI=file:./mlruns"
+          echo "MLFLOW_TRACKING_URI=file:${{ github.workspace }}/mlruns" >> $GITHUB_ENV
 
       - name: Run MLflow Project
         run: |
@@ -55,8 +55,9 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          cd MLProject
-          MLFLOW_CONDA_HOME="" mlflow models build-docker \
+          MLFLOW_TRACKING_URI=file:./mlruns \
+          MLFLOW_CONDA_HOME="" \
+          mlflow models build-docker \
             -m "runs:/${{ env.RUN_ID }}/model" \
             -n ${{ secrets.DOCKER_USERNAME }}/heart-disease-mlflow \
             --env-manager local
