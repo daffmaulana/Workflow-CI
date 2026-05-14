@@ -10,8 +10,6 @@ from sklearn.metrics import accuracy_score
 mlflow.set_tracking_uri("file:./mlruns")
 mlflow.set_experiment("Heart Disease Experiment")
 
-mlflow.sklearn.autolog()
-
 df = pd.read_csv("heartdisease_preprocessing.csv")
 
 X = df.drop("target", axis=1)
@@ -24,26 +22,30 @@ X_train, X_test, y_train, y_test = train_test_split(
     random_state=2026
 )
 
-model = RandomForestClassifier(
-    n_estimators=100,
-    random_state=2026
-)
+with mlflow.start_run():
 
-model.fit(X_train, y_train)
+    model = RandomForestClassifier(
+        n_estimators=100,
+        random_state=2026
+    )
 
-y_pred = model.predict(X_test)
+    model.fit(X_train, y_train)
 
-accuracy = accuracy_score(y_test, y_pred)
+    y_pred = model.predict(X_test)
 
-mlflow.log_metric("accuracy", accuracy)
+    accuracy = accuracy_score(y_test, y_pred)
 
-mlflow.sklearn.log_model(model, "model")
+    mlflow.log_param("n_estimators", 100)
+    mlflow.log_metric("accuracy", accuracy)
 
-joblib.dump(model, "random_forest_model.pkl")
+    mlflow.sklearn.log_model(
+        sk_model=model,
+        artifact_path="model"
+    )
 
-# Ambil active run yang dibuat MLflow Project
-run = mlflow.active_run()
+    joblib.dump(model, "random_forest_model.pkl")
 
-if run:
+    run = mlflow.active_run()
+
     with open("run_id.txt", "w") as f:
         f.write(run.info.run_id)
